@@ -7,6 +7,8 @@ import HeaderEx from "./components/HeaderExercicio";
 import Scroll from "./components/Scroll";
 import Flat from "./components/Flat";
 import Caixa from "./components/Caixa";
+import List from "./components/List";
+import Section from "./components/Section";
 
 export default function App() {
   const [color, setColor] = useState(false);
@@ -45,7 +47,9 @@ export default function App() {
       {/* <HeaderEx /> */}
       {/* <Scroll /> */}
       {/* <Flat /> */}
-      <Caixa />
+      {/* <Caixa /> */}
+      {/* <List /> */}
+      <Section />
     </>
   );
 }
