@@ -5,12 +5,30 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  FlatList,
 } from "react-native";
 import React, { useState } from "react";
 import api from "../../../services/api";
+import MostrarCep from "../MostrarCep";
 
 const Cep = () => {
   const [cep, setCep] = useState();
+  const [info, setInfo] = useState([]);
+
+  const buscarCep = async () => {
+    try {
+      const { data } = await api.get(`${cep}/json`);
+      setInfo(data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  /* TODO: Quero fazer uma função que quando ativada renderize na tela os elementos do cep
+    criei o MostrarCep pra isso, mas não deu certo.
+  */
+
+  //const mostrarInfos = () => {};
 
   return (
     <SafeAreaView>
@@ -26,16 +44,23 @@ const Cep = () => {
       </View>
 
       <View style={styles.areaBtn}>
-        <TouchableOpacity style={[styles.botao, { backgroundColor: "red" }]}>
+        <TouchableOpacity
+          style={[styles.botao, { backgroundColor: "red" }]}
+          onPress={buscarCep}
+        >
           <Text style={styles.botaoText}>Buscar</Text>
         </TouchableOpacity>
       </View>
 
-      <View style={styles.areaBtn}>
-        <TouchableOpacity style={[styles.botao, { backgroundColor: "red" }]}>
-          <Text style={styles.botaoText}>Limpar</Text>
-        </TouchableOpacity>
-      </View>
+      {info.map((item) => (
+        <MostrarCep key={item.cep} item={item} fn={() => buscarCep()} />
+      ))}
+      {/* 
+      <FlatList
+        renderItem={MostrarCep}
+        data={info}
+        keyExtractor={(inf) => inf.cep}
+      ></FlatList> */}
     </SafeAreaView>
   );
 };
