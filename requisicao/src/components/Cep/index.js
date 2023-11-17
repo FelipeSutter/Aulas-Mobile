@@ -7,7 +7,7 @@ import {
   StyleSheet,
   FlatList,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import api from "../../../services/api";
 import MostrarCep from "../MostrarCep";
 
@@ -15,15 +15,20 @@ const Cep = () => {
   const [cep, setCep] = useState();
   const [info, setInfo] = useState([]);
 
+  const inputRef = useRef();
+
   const buscarCep = async () => {
     try {
+      // se tiver vazio
       if (!cep) {
         alert("Coloque um cep válido.");
       } else {
+        // faz a requisição, mas se for um cep inválido entra na mensagem de erro
         const { data } = await api.get(`${cep}/json`);
         if (data.erro) {
           alert("Cep não encontrado. Verifique e tente novamente.");
         } else {
+          // armazena as buscas em um array
           setInfo([...info, data]);
         }
       }
@@ -38,6 +43,8 @@ const Cep = () => {
 
   const limparInfos = () => {
     setInfo("");
+    setCep("");
+    inputRef.current.focus();
   };
 
   /* TODO: Quero fazer uma função que quando ativada renderize na tela os elementos do cep
@@ -54,6 +61,7 @@ const Cep = () => {
           value={cep}
           onChangeText={(txt) => setCep(txt)}
           keyboardType="numeric"
+          ref={inputRef}
         />
       </View>
 
@@ -68,15 +76,9 @@ const Cep = () => {
 
       {info.length > 0 && (
         <>
-          {/* {info.map((item, index) => (
+          {info.map((item, index) => (
             <MostrarCep key={index} item={item} fn={() => limparInfos()} />
-          ))} */}
-
-          <FlatList
-            renderItem={MostrarCep}
-            data={info}
-            keyExtractor={(p) => p.siafi}
-          ></FlatList>
+          ))}
         </>
       )}
 

@@ -1,29 +1,38 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import React from "react";
 
 const MostrarCep = ({ item, fn }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>CEP:</Text>
-      <Text style={styles.info}>{item.cep}</Text>
+      <ScrollView>
+        <Text style={styles.label}>CEP:</Text>
+        <Text style={styles.info}>{item.cep}</Text>
 
-      <Text style={styles.label}>Logradouro:</Text>
-      <Text style={styles.info}>{item.logradouro}</Text>
+        <Text style={styles.label}>Logradouro:</Text>
+        <Text style={styles.info}>{item.logradouro}</Text>
 
-      <Text style={styles.label}>Bairro:</Text>
-      <Text style={styles.info}>{item.bairro}</Text>
+        <Text style={styles.label}>Bairro:</Text>
+        <Text style={styles.info}>{item.bairro}</Text>
 
-      <View style={styles.areaBtn}>
-        <TouchableOpacity style={styles.botao} onPress={fn}>
-          <Text style={styles.botaoText}>Limpar</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={styles.areaBtn}>
+          <TouchableOpacity style={styles.botao} onPress={fn}>
+            <Text style={styles.botaoText}>Limpar</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     marginTop: 20,
     padding: 10,
     borderWidth: 1,
