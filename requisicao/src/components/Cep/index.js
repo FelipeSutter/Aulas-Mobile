@@ -6,10 +6,12 @@ import {
   TouchableOpacity,
   StyleSheet,
   FlatList,
+  ScrollView,
 } from "react-native";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import api from "../../../services/api";
 import MostrarCep from "../MostrarCep";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Cep = () => {
   const [cep, setCep] = useState();
@@ -21,7 +23,7 @@ const Cep = () => {
     try {
       // se tiver vazio
       if (!cep) {
-        alert("Coloque um cep válido.");
+        alert("Campo está vazio. Verifique e tente novamente.");
       } else {
         // faz a requisição, mas se for um cep inválido entra na mensagem de erro
         const { data } = await api.get(`${cep}/json`);
@@ -37,22 +39,25 @@ const Cep = () => {
     }
   };
 
+  // mostra as informações
   const mostrarInfos = async () => {
+    setCep("");
     await buscarCep();
   };
 
-  const limparInfos = () => {
-    setInfo("");
+  //
+  const limparInfos = (index) => {
+    // o filter espera dois parâmetros, e esse segundo pega a posição exata do array, na hora do map coloca o index para indicar
+    // a posicao do array. O primeiro parâmetro pode ser qualquer coisa.
+    const arrayFiltrado = info.filter((_, i) => i !== index);
+    setInfo(arrayFiltrado);
+
     setCep("");
     inputRef.current.focus();
   };
 
-  /* TODO: Quero fazer uma função que quando ativada renderize na tela os elementos do cep
-    criei o MostrarCep pra isso, mas não deu certo.
-  */
-
   return (
-    <SafeAreaView style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={{ alignItems: "center" }}>
         <Text style={styles.text}>Digite o seu cep: </Text>
         <TextInput
@@ -67,25 +72,21 @@ const Cep = () => {
 
       <View style={styles.areaBtn}>
         <TouchableOpacity
-          style={[styles.botao, { backgroundColor: "red" }]}
+          style={[styles.botao, { backgroundColor: "#204090" }]}
           onPress={mostrarInfos}
         >
           <Text style={styles.botaoText}>Buscar</Text>
         </TouchableOpacity>
       </View>
 
-      {info.length > 0 && (
+      {info && (
         <>
           {info.map((item, index) => (
-            <MostrarCep key={index} item={item} fn={() => limparInfos()} />
+            <MostrarCep key={index} item={item} fn={() => limparInfos(index)} />
           ))}
         </>
       )}
-
-      {/* {info && (
-        <MostrarCep key={info.cep} item={info} fn={() => limparInfos()} />
-      )} */}
-    </SafeAreaView>
+    </ScrollView>
   );
 };
 
