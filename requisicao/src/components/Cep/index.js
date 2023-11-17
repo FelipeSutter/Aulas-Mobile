@@ -17,21 +17,35 @@ const Cep = () => {
 
   const buscarCep = async () => {
     try {
-      const { data } = await api.get(`${cep}/json`);
-      setInfo(data);
+      if (!cep) {
+        alert("Coloque um cep válido.");
+      } else {
+        const { data } = await api.get(`${cep}/json`);
+        if (data.erro) {
+          alert("Cep não encontrado. Verifique e tente novamente.");
+        } else {
+          setInfo([...info, data]);
+        }
+      }
     } catch (e) {
       console.log(e);
     }
+  };
+
+  const mostrarInfos = async () => {
+    await buscarCep();
+  };
+
+  const limparInfos = () => {
+    setInfo("");
   };
 
   /* TODO: Quero fazer uma função que quando ativada renderize na tela os elementos do cep
     criei o MostrarCep pra isso, mas não deu certo.
   */
 
-  //const mostrarInfos = () => {};
-
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.container}>
       <View style={{ alignItems: "center" }}>
         <Text style={styles.text}>Digite o seu cep: </Text>
         <TextInput
@@ -46,21 +60,29 @@ const Cep = () => {
       <View style={styles.areaBtn}>
         <TouchableOpacity
           style={[styles.botao, { backgroundColor: "red" }]}
-          onPress={buscarCep}
+          onPress={mostrarInfos}
         >
           <Text style={styles.botaoText}>Buscar</Text>
         </TouchableOpacity>
       </View>
 
-      {info.map((item) => (
-        <MostrarCep key={item.cep} item={item} fn={() => buscarCep()} />
-      ))}
-      {/* 
-      <FlatList
-        renderItem={MostrarCep}
-        data={info}
-        keyExtractor={(inf) => inf.cep}
-      ></FlatList> */}
+      {info.length > 0 && (
+        <>
+          {/* {info.map((item, index) => (
+            <MostrarCep key={index} item={item} fn={() => limparInfos()} />
+          ))} */}
+
+          <FlatList
+            renderItem={MostrarCep}
+            data={info}
+            keyExtractor={(p) => p.siafi}
+          ></FlatList>
+        </>
+      )}
+
+      {/* {info && (
+        <MostrarCep key={info.cep} item={info} fn={() => limparInfos()} />
+      )} */}
     </SafeAreaView>
   );
 };
@@ -68,6 +90,7 @@ const Cep = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: 25,
   },
   text: {
     marginTop: 25,
