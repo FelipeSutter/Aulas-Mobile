@@ -20,6 +20,12 @@ const MostrarCep = ({ item, fn }) => {
         <Text style={styles.label}>Bairro:</Text>
         <Text style={styles.info}>{item.bairro}</Text>
 
+        <Text style={styles.label}>Localidade:</Text>
+        <Text style={styles.info}>{item.localidade}</Text>
+
+        <Text style={styles.label}>Estado:</Text>
+        <Text style={styles.info}>{item.uf}</Text>
+
         <View style={styles.areaBtn}>
           <TouchableOpacity style={styles.botao} onPress={fn}>
             <Text style={styles.botaoText}>Limpar</Text>

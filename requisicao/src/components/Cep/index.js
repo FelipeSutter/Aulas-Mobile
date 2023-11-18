@@ -24,11 +24,13 @@ const Cep = () => {
       // se tiver vazio
       if (!cep) {
         alert("Campo está vazio. Verifique e tente novamente.");
+        inputRef.current.focus();
       } else {
         // faz a requisição, mas se for um cep inválido entra na mensagem de erro
         const { data } = await api.get(`${cep}/json`);
         if (data.erro) {
           alert("Cep não encontrado. Verifique e tente novamente.");
+          inputRef.current.focus();
         } else {
           // armazena as buscas em um array
           setInfo([...info, data]);
@@ -53,7 +55,7 @@ const Cep = () => {
     setInfo(arrayFiltrado);
 
     setCep("");
-    inputRef.current.focus();
+    // inputRef.current.focus();
   };
 
   return (
